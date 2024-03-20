@@ -1,0 +1,160 @@
+#include <iostream>
+#include <fstream>
+#include <cctype>
+using namespace std;
+
+struct Bus {
+    string busNumber;
+    string busName;
+    string busDestination;
+    string busSeats;
+};
+
+struct Reservation {
+    string name;
+    int seatNumber;
+    int seat_availabe;
+};
+
+void insertBusDetails() {
+    Bus bus;
+//    system ("cls");
+    cout << "Enter the bus destination: ";
+    cin.ignore();
+    getline(cin, bus.busDestination);
+
+    cout << "Enter bus number: ";
+    cin >> bus.busNumber;
+    
+    cout<< "Enter bus seats: ";
+    cin>> bus.busSeats;
+    
+	cout << "Enter bus name: ";
+    cin.ignore();
+    getline(cin, bus.busName);
+
+    ofstream file("bus_details.txt", ios::app);
+    file << bus.busNumber << " " << bus.busName << " " << bus.busDestination << " " << bus.busSeats<< " "<< endl;
+    file.close();
+
+    cout << "Bus details inserted successfully!" << endl;
+}
+
+void reserveSeat() {
+//	system ("cls");
+	
+	int n;
+	
+	Reservation reservation;
+    cout << "Enter your name: ";
+    cin.ignore();
+    getline(cin, reservation.name);
+    cout << "Enter seat number: ";
+    cin >> reservation.seatNumber;
+    
+    if ( reservation.seatNumber<=30){
+	
+    ofstream file("reservations.txt", ios::app);
+    file << reservation.name << " " << reservation.seatNumber << endl;
+    file.close();
+
+    cout << "Seat reserved successfully!" << endl;
+}
+else {
+	cout << "This bus contails only 30 seats. Please enter correct seats."<< endl;
+}
+
+}
+
+void displayReservations() {
+//	system ("cls");
+    ifstream file("reservations.txt");
+    string name;
+    int seatNumber;
+
+    cout << "Reservations:" << endl;
+    while (file >> name >> seatNumber) {
+       
+        cout << "_____________________________________________________"<< endl;
+	   
+	    cout << "Name: " << name << ", Seat Number: " << seatNumber << endl;
+        
+		cout << "_____________________________________________________"<< endl;
+	}
+
+    file.close();
+}
+
+
+void displayBusDetails() {
+//	system ("cls");
+    ifstream file("bus_details.txt");
+    string busNumber;
+    string busName;
+    string busDestination;
+
+    cout << "Bus Details:" << endl;
+    while (file >> busNumber >> busName) {
+        getline(file, busDestination);
+        busDestination = busDestination.substr(1);
+       
+       cout << "___________________________________________________________________" << endl; 
+
+        cout <<  "Bus Number: " << busNumber  << endl << "Bus Name: " << busName << endl <<"Destination: " << busDestination << endl;
+    
+       cout << "____________________________________________________________________________________" << endl;
+	}
+
+    file.close();
+}void resetStorage() {
+    // Remove the existing files to reset storage
+    remove("reservations.txt");
+    remove("bus_details.txt");
+    cout << "Storage has been reset." << endl;
+}
+
+int main() {
+    int choice;
+     
+     cout << "***********>> WELCOME TO OUR BUS RESERVATION SERVICE <<***********"<< endl;
+
+    do {
+    	cout << "__________________________________________________"<< endl;
+        cout << "1. Insert bus details" << endl;
+        cout << "2. Reserve a seat" << endl;
+        cout << "3. Display reservations" << endl;
+        cout << "4. Display bus details" << endl;
+        cout << "5. Clear reservations " << endl;
+        cout << "6. Exit"<<endl;
+        
+        cout <<"___________________________________________________" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+           
+        cout << endl;
+        switch (choice) {
+            case 1:
+                insertBusDetails();
+                break;
+            case 2:
+                reserveSeat();
+                break;
+            case 3:
+                displayReservations();
+                break;
+            case 4:
+                displayBusDetails();
+                break;
+            case 5:
+                resetStorage();
+                break;
+            case 6:
+                cout << "Exiting the program. Goodbye!" << endl;
+                return 0;
+            default:
+                cout << "Invalid choice. Please enter a valid option." << endl;
+        }
+    } while (choice != 5);
+
+    return 0;
+}
